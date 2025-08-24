@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Очередь постов</h1>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Заголовок</th>
+      <th>Автор</th>
+      <th>Создан</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for post in posts %}
+    <tr>
+      <td>{{ post.id }}</td>
+      <td><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></td>
+      <td>{{ post.author.username }}</td>
+      <td>{{ post.created_at }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="4">Нет постов.</td></tr>
+  {% endfor %}
+  </tbody>
+{% endblock %}
+
+

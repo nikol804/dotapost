@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Регистрация — Dota 2 News{% endblock %}
+{% block content %}
+<h1>Регистрация</h1>
+<form method="post" action="{% url 'register' %}">
+  {% csrf_token %}
+  {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+  {% endif %}
+  {{ form.non_field_errors }}
+  <div class="form-row">Имя пользователя {% render_field form.username class+="input" autocomplete="username" %}
+    {% for error in form.username.errors %}<div class="error">{{ error }}</div>{% endfor %}
+  </div>
+  <div class="form-row">Email {% render_field form.email class+="input" autocomplete="email" %}
+    {% for error in form.email.errors %}<div class="error">{{ error }}</div>{% endfor %}
+  </div>
+  <div class="form-row">Пароль {% render_field form.password1 class+="input" type="password" autocomplete="new-password" %}
+    {% for error in form.password1.errors %}<div class="error">{{ error }}</div>{% endfor %}
+  </div>
+  <div class="form-row">Повтор пароля {% render_field form.password2 class+="input" type="password" autocomplete="new-password" %}
+    {% for error in form.password2.errors %}<div class="error">{{ error }}</div>{% endfor %}
+  </div>
+  <button class="btn" type="submit">Зарегистрироваться</button>
+</form>
+{% endblock %}

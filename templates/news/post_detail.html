@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}{{ post.title }} — Dota 2 News{% endblock %}
+{% block content %}
+<article class="post">
+  <h1>{{ post.title }}</h1>
+  <div class="meta">Автор: <a href="{% url 'profile_public' post.author.username %}">{{ post.author.username }}</a> • {{ post.published_at|date:'d.m.Y H:i' }}</div>
+  {% if post.cover %}
+    <div class="cover"><img src="{{ post.cover.url }}" alt="{{ post.title }}"></div>
+  {% endif %}
+  <div class="body">{{ post.body|safe }}</div>
+
+  {% if user.is_authenticated and user == post.author %}
+    <p><a class="btn" href="{% url 'post_edit' post.pk %}">Редактировать</a></p>
+  {% endif %}
+
+  <form method="post" action="{% url 'post_like_toggle' post.published_at.year post.published_at.month post.slug %}">
+    {% csrf_token %}
+    <button class="btn" type="submit">{% if user_liked %}Убрать лайк{% else %}Лайк{% endif %} ({{ likes_count }})</button>
+  </form>
+</article>
+
+<section class="comments">
+  <h2>Комментарии ({{ comments|length }})</h2>
+  {% for c in comments %}
+    <div class="comment">
+      <div class="comment-meta">{{ c.author.username }} • {{ c.created_at|date:'d.m.Y H:i' }}</div>
+      <div class="comment-body">{{ c.body|safe }}</div>
+      <div class="comment-actions">
+        {% if user.is_authenticated and user == c.author %}
+          <form method="post" action="{% url 'comment_delete' c.pk %}">
+            {% csrf_token %}
+            <button class="btn btn-secondary" type="submit">Удалить</button>
+          </form>
+        {% endif %}
+      </div>
+
+      {% if c.replies.all %}
+        <div class="replies">
+          {% for r in c.replies.all %}
+            <div class="comment reply">
+              <div class="comment-meta">{{ r.author.username }} • {{ r.created_at|date:'d.m.Y H:i' }}</div>
+              <div class="comment-body">{{ r.body|safe }}</div>
+              {% if user.is_authenticated and user == r.author %}
+                <form method="post" action="{% url 'comment_delete' r.pk %}">
+                  {% csrf_token %}
+                  <button class="btn btn-secondary" type="submit">Удалить</button>
+                </form>
+              {% endif %}
+            </div>
+          {% empty %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if user.is_authenticated %}
+        <details class="reply-form">
+          <summary>Ответить</summary>
+          <form method="post" action="{% url 'comment_create' post.published_at.year post.published_at.month post.slug %}">
+            {% csrf_token %}
+            <input type="hidden" name="parent" value="{{ c.pk }}">
+            <label for="id_body_{{ c.pk }}">Ваш ответ</label>
+            <textarea name="body" id="id_body_{{ c.pk }}" rows="3" required></textarea>
+            <button class="btn" type="submit">Отправить</button>
+          </form>
+        </details>
+      {% endif %}
+    </div>
+  {% empty %}
+    <p>Комментариев пока нет.</p>
+  {% endfor %}
+
+  {% if user.is_authenticated %}
+  <form method="post" action="{% url 'comment_create' post.published_at.year post.published_at.month post.slug %}">
+    {% csrf_token %}
+    <label for="id_body">Добавить комментарий</label>
+    <textarea name="body" id="id_body" rows="4" required></textarea>
+    <button class="btn" type="submit">Отправить</button>
+  </form>
+  {% else %}
+    <p><a href="{% url 'login' %}">Войдите</a>, чтобы комментировать.</p>
+  {% endif %}
+</section>
+{% endblock %}

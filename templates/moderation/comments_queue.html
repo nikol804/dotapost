@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Очередь комментариев</h1>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Автор</th>
+      <th>Пост</th>
+      <th>Создан</th>
+      <th>Текст</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for c in comments %}
+    <tr>
+      <td>{{ c.id }}</td>
+      <td>{{ c.author.username }}</td>
+      <td><a href="{{ c.post.get_absolute_url }}">{{ c.post.title }}</a></td>
+      <td>{{ c.created_at }}</td>
+      <td>{{ c.body|safe }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="5">Нет комментариев.</td></tr>
+  {% endfor %}
+  </tbody>
+{% endblock %}
+
+

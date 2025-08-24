@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}{{ view.object|default_if_none:'Новый пост' }} — Dota 2 News{% endblock %}
+{% block content %}
+<h1>{% if view.object %}Редактирование поста{% else %}Новый пост{% endif %}</h1>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="form">
+    {{ form.non_field_errors }}
+    <div class="form-row">{{ form.title.label_tag }} {% render_field form.title class+="input" %}</div>
+    <div class="form-row">{{ form.summary.label_tag }} {% render_field form.summary class+="input" %}</div>
+    <div class="form-row">{{ form.body.label_tag }} {% render_field form.body class+="textarea" rows="10" %}</div>
+    <div class="form-row">{{ form.cover.label_tag }} {% render_field form.cover class+="input" %}</div>
+    <div class="form-row">{{ form.status.label_tag }} {% render_field form.status class+="select" %}</div>
+  </div>
+  <button class="btn" type="submit">Сохранить</button>
+</form>
+{% endblock %}

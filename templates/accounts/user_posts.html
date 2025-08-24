@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Посты пользователя — Dota 2 News{% endblock %}
+{% block content %}
+<h1>Посты пользователя {{ view.kwargs.username }}</h1>
+<div class="grid">
+  {% for post in posts %}
+  <article class="card">
+    <a href="{{ post.get_absolute_url }}" class="card-cover">
+      {% if post.cover %}<img src="{{ post.cover.url }}" alt="{{ post.title }}">{% endif %}
+    </a>
+    <div class="card-body">
+      <h2 class="card-title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+      <div class="card-meta">{{ post.published_at|date:'d.m.Y H:i' }}</div>
+    </div>
+  </article>
+  {% empty %}
+    <p>Постов нет.</p>
+  {% endfor %}
+</div>
+{% if is_paginated %}
+<nav class="pagination">
+  {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Назад</a>{% endif %}
+  <span>Стр. {{ page_obj.number }} из {{ paginator.num_pages }}</span>
+  {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Вперёд</a>{% endif %}
+</nav>
+{% endif %}
+{% endblock %}

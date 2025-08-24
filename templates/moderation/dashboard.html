@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Модерация</h1>
+<ul>
+  <li>Постов ожидает: {{ pending_posts }}</li>
+  <li>Скрытых комментариев: {{ hidden_comments }}</li>
+  <li><a href="{% url 'moderation_posts' %}">Очередь постов</a></li>
+  <li><a href="{% url 'moderation_comments' %}">Очередь комментариев</a></li>
+{% endblock %}
+
+

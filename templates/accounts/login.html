@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Вход — Dota 2 News{% endblock %}
+{% block content %}
+<h1>Вход</h1>
+<form method="post" action="{% url 'login' %}">
+  {% csrf_token %}
+  {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+  {% endif %}
+  {{ form.non_field_errors }}
+  <div class="form-row">Логин {% render_field form.login class+="input" autocomplete="username" %}
+    {% for error in form.login.errors %}<div class="error">{{ error }}</div>{% endfor %}
+  </div>
+  <div class="form-row">Пароль {% render_field form.password class+="input" type="password" autocomplete="current-password" %}
+    {% for error in form.password.errors %}<div class="error">{{ error }}</div>{% endfor %}
+  </div>
+  <button class="btn" type="submit">Войти</button>
+</form>
+{% endblock %}

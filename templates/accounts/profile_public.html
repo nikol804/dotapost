@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Профиль — Dota 2 News{% endblock %}
+{% block content %}
+<div class="profile">
+  <div class="profile-header">
+    {% if profile_user.profile.avatar %}
+      <img class="avatar" src="{{ profile_user.profile.avatar.url }}" alt="{{ profile_user.username }}">
+    {% endif %}
+    <h1>{{ profile_user.profile.display_name|default:profile_user.username }}</h1>
+    {% if profile_user.profile.website %}
+      <p><a href="{{ profile_user.profile.website }}" target="_blank" rel="noopener">Сайт</a></p>
+    {% endif %}
+  </div>
+  <div class="profile-bio">{{ profile_user.profile.bio }}</div>
+  <p><a class="btn" href="{% url 'user_posts' profile_user.username %}">Посты пользователя</a></p>
+</div>
+{% endblock %}

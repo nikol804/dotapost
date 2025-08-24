@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Dota 2 News{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="brand">Dota2 News</a>
+    <nav class="nav">
+      <a href="/" class="nav-link">Лента</a>
+      <a href="{% url 'post_top_week' %}" class="nav-link">Топ за неделю</a>
+      <a href="{% url 'post_top_month' %}" class="nav-link">Топ за месяц</a>
+      <a href="{% url 'post_interesting' %}" class="nav-link">Интересные</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'post_create' %}" class="nav-link">Создать пост</a>
+        <a href="{% url 'profile_public' user.username %}" class="nav-link">Мой профиль</a>
+        <a href="{% url 'logout' %}" class="nav-link">Выйти</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="nav-link">Войти</a>
+        <a href="{% url 'register' %}" class="nav-link">Регистрация</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+
+<main class="container main">
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="message {{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>© {{ now|date:'Y' }} Dota2 News</p>
+  </div>
+</footer>
+</body>
+</html>

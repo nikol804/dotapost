@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}{{ page_title|default:'Лента' }} — Dota 2 News{% endblock %}
+{% block content %}
+<h1>{{ page_title|default:"Лента" }}</h1>
+<div class="grid">
+  {% for post in posts %}
+    <article class="card">
+      <a href="{{ post.get_absolute_url }}" class="card-cover">
+        {% if post.cover %}<img src="{{ post.cover.url }}" alt="{{ post.title }}">{% endif %}
+      </a>
+      <div class="card-body">
+        <h2 class="card-title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+        <div class="card-meta">
+          Автор: <a href="{% url 'profile_public' post.author.username %}">{{ post.author.username }}</a>
+          <span> • {{ post.published_at|date:'d.m.Y H:i' }}</span>
+        </div>
+        <div class="card-stats">
+          <span>👍 {{ post.likes_count|default:0 }}</span>
+          <span>💬 {{ post.comments_count|default:0 }}</span>
+        </div>
+      </div>
+    </article>
+  {% empty %}
+    <p>Постов пока нет.</p>
+  {% endfor %}
+</div>
+
+{% if is_paginated %}
+<nav class="pagination">
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">Назад</a>
+  {% endif %}
+  <span>Стр. {{ page_obj.number }} из {{ paginator.num_pages }}</span>
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Вперёд</a>
+  {% endif %}
+</nav>
+{% endif %}
+{% endblock %}

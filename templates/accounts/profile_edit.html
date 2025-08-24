@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Редактирование профиля — Dota 2 News{% endblock %}
+{% block content %}
+<h1>Редактирование профиля</h1>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-row">Отображаемое имя {% render_field form.display_name class+="input" %}</div>
+  <div class="form-row">О себе {% render_field form.bio class+="textarea" rows="5" %}</div>
+  <div class="form-row">Аватар {% render_field form.avatar class+="input" %}</div>
+  <div class="form-row">Сайт {% render_field form.website class+="input" %}</div>
+  <button class="btn" type="submit">Сохранить</button>
+</form>
+{% endblock %}
