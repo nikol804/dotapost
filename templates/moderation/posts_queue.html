@@ -18,6 +18,16 @@
       <td><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></td>
       <td>{{ post.author.username }}</td>
       <td>{{ post.created_at }}</td>
+      <td>
+        <form method="post" action="{% url 'moderation_post_approve' pk=post.id %}">{% csrf_token %}
+          <input type="hidden" name="reason" value="">
+          <button type="submit">Опубликовать</button>
+        </form>
+        <form method="post" action="{% url 'moderation_post_reject' pk=post.id %}">{% csrf_token %}
+          <input type="hidden" name="reason" value="">
+          <button type="submit">Отклонить</button>
+        </form>
+      </td>
     </tr>
   {% empty %}
     <tr><td colspan="4">Нет постов.</td></tr>

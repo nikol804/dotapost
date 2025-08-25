@@ -34,7 +34,12 @@ HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD python -c "import socket
 # Default port
 EXPOSE 8000
 
-# Entrypoint allows overriding command
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
+
+
 
 
