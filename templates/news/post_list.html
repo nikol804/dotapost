@@ -5,11 +5,17 @@
 <div class="grid">
   {% for post in posts %}
     <article class="card">
+      {% if post.slug %}
       <a href="{{ post.get_absolute_url }}" class="card-cover">
         {% if post.cover %}<img src="{{ post.cover.url }}" alt="{{ post.title }}">{% endif %}
       </a>
+      {% else %}
+      <div class="card-cover">
+        {% if post.cover %}<img src="{{ post.cover.url }}" alt="{{ post.title }}">{% endif %}
+      </div>
+      {% endif %}
       <div class="card-body">
-        <h2 class="card-title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+        <h2 class="card-title">{% if post.slug %}<a href="{{ post.get_absolute_url }}">{{ post.title }}</a>{% else %}{{ post.title }}{% endif %}</h2>
         <div class="card-meta">
           Автор: <a href="{% url 'profile_public' post.author.username %}">{{ post.author.username }}</a>
           <span> • {{ post.published_at|date:'d.m.Y H:i' }}</span>

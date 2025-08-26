@@ -15,7 +15,8 @@ class ModeratorsOnlyMixin(UserPassesTestMixin):
         user = self.request.user
         if not user.is_authenticated:
             return False
-        return user.is_staff or user.is_superuser
+        # Доступ к модерации — только для администратора сайта (superuser)
+        return user.is_superuser
 
     def handle_no_permission(self):
         # скрываем факт существования

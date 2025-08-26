@@ -12,7 +12,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-import dj_database_url
+
+# dj_database_url may be absent in some dev environments; import lazily
+try:
+    import dj_database_url
+except Exception:  # pragma: no cover - optional dependency in dev
+    dj_database_url = None
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -92,10 +97,13 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 # Prefer DATABASE_URL (e.g., Postgres) if provided, else fallback to SQLite
 DATABASE_URL = os.getenv('DATABASE_URL')
-if DATABASE_URL:
+if DATABASE_URL and dj_database_url:
     DATABASES = {
         'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
     }
+elif DATABASE_URL and not dj_database_url:
+    # DATABASE_URL provided but dj_database_url missing -> fail fast with helpful message
+    raise RuntimeError('DATABASE_URL is set but dj-database-url is not installed. Install via requirements.txt or unset DATABASE_URL in dev.')
 else:
     DATABASES = {
         'default': {
