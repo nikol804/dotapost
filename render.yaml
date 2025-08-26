@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: opiun
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn myproject.wsgi --log-file -
+    autoDeploy: true
+    region: frankfurt
+    
+    # Выполнится после успешного деплоя, когда ENV уже доступны
+    postDeployCommand: |
+      python manage.py migrate --noinput
+      python manage.py collectstatic --noinput
